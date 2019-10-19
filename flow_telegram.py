@@ -4,6 +4,31 @@ import time
 import requests
 import json
 
+def get_msm_code():
+    try:
+        id = get_telephone_number()
+        id[2]
+        querystring = {"metod": "get_sms", "country": "ID", "service": "opt29", "id": id[2],
+                       "apikey": "ZOpFYmG5MxgHop0p3S1ZiHaG8bMZQ0"}
+
+        url = "http://smspva.com/priemnik.php"
+
+        headers = {
+            'User-Agent': "PostmanRuntime/7.18.0",
+            'Accept': "/",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "078f547e-ac35-4134-a504-1b2b6b277a45",
+            'Host': "smspva.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Connection': "keep-alive",
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring, timeout=4)
+        temp = json.loads(response.text)
+        tempInfo = (temp['sms'])
+        return tempInfo
+    except Exception as e:
+        print(e)
+
 def get_telephone_number():
     try:
         querystring = {"metod": "get_number", "country": "ID", "service": "opt29",
@@ -22,7 +47,7 @@ def get_telephone_number():
         }
         response = requests.request("GET", url, headers=headers, params=querystring, timeout=4)
         temp = json.loads(response.text)
-        tempInfo = (temp['CountryCode'], temp['number'])
+        tempInfo = (temp['CountryCode'], temp['number'], temp['id'])
         return tempInfo
     except Exception as e:
         print(e)
